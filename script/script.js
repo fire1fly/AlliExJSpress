@@ -110,10 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const showCardBasket = goods => goods.filter(item => goodsBasket.hasOwnProperty(item.id));
+
   const openCart = event => {
     event.preventDefault();
     cart.style.display = 'flex';
     document.addEventListener('keyup', closeCart);
+    getGoods(renderBasket, showCardBasket);
   };
 
   const getGoods = (goods, filter) => {
@@ -162,10 +165,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const cookieQuery = get => {
     if (get) {
       goodsBasket = JSON.parse(getCookie('goodsBasket'));
+      checkCounter(); 
     } else {
       document.cookie = `goodsBasket=${JSON.stringify(goodsBasket)}; max-age=86400e3`;
-    }
-    checkCounter(); 
+    } 
   };
 
   const checkCounter = () => {
@@ -179,11 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const wishlistStorage = JSON.parse(localStorage.getItem('wishlist'));
         wishlistStorage.forEach(id => wishlist.push(id));
       }
-      
+      checkCounter();
     } else {  
       localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    }
-    checkCounter();
+    } 
+    
   };
 
   const toggleWishlist = (goodsId, elem) => {
@@ -198,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     storageQuery();
   };
 
-  const addBasket = (id) => {
+  const addBasket = id => {
     if (goodsBasket[id]) {
       goodsBasket[id] += 1
     } else {
@@ -218,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const showWishlist = (event) => {
+  const showWishlist = event => {
     event.preventDefault();
     getGoods(renderCard, goods => goods.filter(item => wishlist.includes(item.id)))
   };  
