@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cartWrapper = document.querySelector('.cart-wrapper');
 
   const wishlist = [];
-  const goodsBasket = {};
+  let goodsBasket = {};
 
   const loading = () => {
     goodsWrapper.innerHTML = `<div id="spinner">
@@ -157,10 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
       "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
     ));
     return matches ? decodeURIComponent(matches[1]) : undefined;
-  };
+  }; 
 
   const cookieQuery = get => {
-    
+    if (get) {
+      goodsBasket = JSON.parse(getCookie('goodsBasket'));
+    } else {
+      document.cookie = `goodsBasket=${JSON.stringify(goodsBasket)}; max-age=86400e3`;
+    }
+    checkCounter(); 
   };
 
   const checkCounter = () => {
@@ -200,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
       goodsBasket[id] = 1
     }
     checkCounter();
+    cookieQuery();
   };
 
   const handlerGoods = event => {
@@ -212,7 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const showWishlist = () => {
+  const showWishlist = (event) => {
+    event.preventDefault();
     getGoods(renderCard, goods => goods.filter(item => wishlist.includes(item.id)))
   };  
 
@@ -225,4 +232,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   getGoods(renderCard, randomSort);
   storageQuery(true);
+  cookieQuery(true);
 });
