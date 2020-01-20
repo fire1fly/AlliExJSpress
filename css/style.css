@@ -18,37 +18,37 @@
 
 @-webkit-keyframes error {
   0% {
-    border: 3px solid #FF4747;
+    border: 3px solid #4A76A8;
   }
   25% {
     border: 3px solid #0059FF;
   }
   50% {
-    border: 3px solid #ff9a00;
+    border: 3px solid #4A76A8;
   }
   75% {
     border: 3px solid #FF63F5;
   }
   100% {
-    border: 3px solid #FF4747;
+    border: 3px solid #4A76A8;
   }
 }
 
 @keyframes error {
   0% {
-    border: 3px solid #FF4747;
+    border: 3px solid #4A76A8;
   }
   25% {
     border: 3px solid #0059FF;
   }
   50% {
-    border: 3px solid #ff9a00;
+    border: 3px solid #4A76A8;
   }
   75% {
     border: 3px solid #FF63F5;
   }
   100% {
-    border: 3px solid #FF4747;
+    border: 3px solid #4A76A8;
   }
 }
 
@@ -112,12 +112,12 @@ button:focus {
       -ms-user-select: none;
           user-select: none;
   margin-top: auto;
-  border: 2px solid #FF4747;
+  border: 2px solid #4A76A8;
   font-weight: 700;
   outline: none;
   min-height: 32px;
   color: #fff;
-  background-color: #FF4747;
+  background-color: #4A76A8;
 }
 
 .btn:hover {
@@ -147,15 +147,27 @@ nav {
 }
 
 nav .logo {
-  display: block;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-decoration: none;
+  color: #000;
+  font-size: 30px;
   height: 96px;
   width: 212px;
   margin-left: 15px;
   margin-right: 15px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: 0;
-  background-image: url("../img/logo.gif");
+}
+
+nav .logo span {
+  color: #4A76A8;
+  font-weight: bold;
 }
 
 nav .catalog {
@@ -165,7 +177,7 @@ nav .catalog {
   left: 0;
   z-index: 120;
   background: #ffffff;
-  border: 2px solid #FF4747;
+  border: 2px solid #4A76A8;
   width: 118px;
 }
 
@@ -200,7 +212,7 @@ nav .catalog-button button {
   width: 118px;
   height: 40px;
   border-radius: 3px;
-  background-color: #FF4747;
+  background-color: #4A76A8;
   color: #fff;
   font-weight: 700;
   padding: 0;
@@ -235,7 +247,7 @@ nav .search {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  border: 3px solid #FF4747;
+  border: 3px solid #4A76A8;
 }
 
 nav .search-wrapper {
@@ -283,7 +295,7 @@ nav .search-wrap-brn {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   overflow: hidden;
-  background-color: #FF4747;
+  background-color: #4A76A8;
 }
 
 nav .search-btn {
@@ -291,7 +303,7 @@ nav .search-btn {
   border-color: transparent;
   height: 100%;
   width: 100%;
-  background-color: #FF4747;
+  background-color: #4A76A8;
   border: none;
 }
 
@@ -339,7 +351,7 @@ nav .search-btn::before {
   height: 16px;
   border-radius: 8px;
   padding: 0 8px;
-  background-color: #FF4747;
+  background-color: #4A76A8;
   color: #fff;
   font-size: 12px;
   line-height: 16px;
@@ -420,7 +432,7 @@ nav .search-btn::before {
 }
 
 .category-item:hover {
-  color: #FF4747;
+  color: #4A76A8;
 }
 
 .category-item:before {
@@ -552,7 +564,7 @@ nav .search-btn::before {
 .card-title:hover {
   text-decoration: underline;
   cursor: pointer;
-  color: #FF4747;
+  color: #4A76A8;
 }
 
 .card-body {
@@ -574,7 +586,7 @@ nav .search-btn::before {
 .card-add-cart {
   display: none;
   margin: 0 auto;
-  background: #ff9a00;
+  background: #4A76A8;
   padding: 3px 9px;
   min-width: 165px;
   color: #fff;
@@ -601,7 +613,7 @@ nav .search-btn::before {
 }
 
 .card-add-wishlist:hover {
-  background-color: #f90;
+  background-color: #4A76A8;
   background-position: 4px -2588px;
 }
 
@@ -626,7 +638,7 @@ nav .search-btn::before {
 }
 
 .card-store:hover {
-  color: #FF4747;
+  color: #4A76A8;
 }
 
 .pb-150 {
@@ -863,7 +875,7 @@ nav .search-btn::before {
 }
 
 .spinner-loading > div div:nth-child(1) > div {
-  background: #FF4747;
+  background: #4A76A8;
   -webkit-transform: rotate(0deg);
           transform: rotate(0deg);
 }
@@ -885,7 +897,7 @@ nav .search-btn::before {
 }
 
 .spinner-loading > div div:nth-child(3) > div {
-  background: #ff9a00;
+  background: #4A76A8;
   -webkit-transform: rotate(0deg);
           transform: rotate(0deg);
 }

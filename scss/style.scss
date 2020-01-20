@@ -1,5 +1,5 @@
-$main-color: #FF4747;
-$second-color: #ff9a00;
+$main-color: #4A76A8;
+$second-color: #4A76A8;
 $blue: #0059FF;
 $pink: #FF63F5;
 
@@ -120,15 +120,20 @@ nav {
   margin: 10px 0;
 
   .logo {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    font-size: 30px;
     height: 96px;
     width: 212px;
     margin-left: 15px;
     margin-right: 15px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: 0;
-    background-image: url("../img/logo.gif");
+    span {
+      color: #4A76A8;
+      font-weight: bold;
+    }
   }
 
   .catalog {
@@ -283,7 +288,7 @@ nav {
     height: 16px;
     border-radius: 8px;
     padding: 0 8px;
-    background-color: #FF4747;
+    background-color: #4A76A8;
     color: #fff;
     font-size: 12px;
     line-height: 16px;
@@ -540,7 +545,7 @@ nav {
     border: none;
 
     &:hover {
-      background-color: #f90;
+      background-color: #4A76A8;
       background-position: 4px -2588px;
     }
 
