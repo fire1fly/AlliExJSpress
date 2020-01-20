@@ -422,12 +422,10 @@ nav {
 
 .card {
   border: none;
-
   border-radius: 8px;
   width: 220px;
   top: 0;
   left: 0;
-
   &-wrapper {
     position: relative;
   }
@@ -574,6 +572,10 @@ nav {
 
 }
 
+.pb-150 {
+  padding-bottom: 150px;
+}
+
 .cart {
   display: none;
   position: fixed;
@@ -641,7 +643,7 @@ nav {
     }
   }
 
-  &-total {
+  &-total { 
     font-size: 28px;
 
     span {
@@ -661,7 +663,6 @@ nav {
     background-color: #fff;
     border-radius: 8px;
     margin-bottom: 10px;
-
     &-img {
       max-width: 120px;
       border-top-left-radius: 8px;

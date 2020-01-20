@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   const search = document.querySelector('.search');
         cartBtn = document.getElementById('cart'),
@@ -12,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const wishlist = [];
   let goodsBasket = {};
 
-  const loading = () => {
-    goodsWrapper.innerHTML = `<div id="spinner">
+  const loading = (nameFunction) => {
+    const spinner = `<div id="spinner">
                                 <div class="spinner-loading">
                                   <div>
                                     <div>
@@ -30,8 +31,27 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </div>
                                   </div>
                                 </div>
-                              </div>`
+                              </div>`;
+
+    if (nameFunction === 'renderCard') {
+      goodsWrapper.innerHTML = spinner;
+    }
+    if (nameFunction === 'renderBasket') {
+      cartWrapper.innerHTML = spinner ;
+    }
   };
+
+  // Запрос на сервер
+
+  const getGoods = (goods, filter) => {
+    loading(goods.name);
+    fetch('./db/db.json')
+      .then(response => response.json())
+      .then(filter)
+      .then(goods);
+  };
+
+  // Генерация карточек товаров
 
   const createCardGoods = (id, title, price, img) => {
     const card = document.createElement('div');
@@ -54,19 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return card;
   };
 
-  const renderCard = goods => {
-    goodsWrapper.textContent = '';
-    if (goods.length) {
-      goods.forEach(({ id, title, price, imgMin }) => {
-        goodsWrapper.appendChild(createCardGoods(id, title, price, imgMin));
-      })
-    } else {
-      goodsWrapper.textContent = '❌ Упс! Товаров по вашему запросу не найдено. ❌';
-    }
-  };
-
-  // Рендер товаров в КОРЗИНЕ
-
   const createCardGoodsBasket = (id, title, price, img) => {
     const card = document.createElement('div');
     card.className = 'goods';
@@ -84,10 +91,25 @@ document.addEventListener('DOMContentLoaded', () => {
                           data-goods-id="${id}"></button>
                           <button class="goods-delete" data-goods-id="${id}"></button>
                         </div>
-                        <div class="goods-count">1</div>
+                        <div class="goods-count">${goodsBasket[id]}</div>
                       </div>`;  
     return card;
   };
+
+  // Рендеры (отображение) карточек
+
+  const renderCard = goods => {
+    goodsWrapper.textContent = '';
+    if (goods.length) {
+      goods.forEach(({ id, title, price, imgMin }) => {
+        goodsWrapper.appendChild(createCardGoods(id, title, price, imgMin));
+      })
+    } else {
+      goodsWrapper.textContent = '❌ Упс! Товаров по вашему запросу не найдено. ❌';
+    }
+  };
+
+  // Рендер товаров в КОРЗИНЕ
 
   const renderBasket = goods => {
     cartWrapper.textContent = '';
@@ -100,6 +122,74 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Калькуляция
+
+  const calcTotalPrice = goods => {
+    // let sum =  0;
+    let sum = goods.reduce((accum, item) => {
+      return accum + item.price * goodsBasket[item.id];
+    }, 0);
+    // for (const item of goods) {
+    //   sum += item.price * goodsBasket[item.id];
+    // }
+    cart.querySelector('.cart-total>span').textContent = sum.toFixed(2);
+  };
+
+  const checkCounter = () => {
+    wishlistCounter.textContent = wishlist.length;
+    cartCounter.textContent = Object.keys(goodsBasket).length;
+  };
+
+  // фильтры и функции фильтрации
+
+  const showCardBasket = goods => {
+    const basketGoods = goods.filter(item => goodsBasket.hasOwnProperty(item.id));
+    calcTotalPrice(basketGoods);
+    return basketGoods;
+  };
+
+  const showWishlist = event => {
+    event.preventDefault();
+    getGoods(renderCard, goods => goods.filter(item => wishlist.includes(item.id)))
+  }; 
+
+  const randomSort = item => item.sort(() => Math.random() - 0.5);
+
+  // Работа с хранилищами
+
+  const getCookie = (name) => {
+    let matches = document.cookie.match(new RegExp(
+      "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+  }; 
+
+  const cookieQuery = get => {
+    if (get) {
+      if (getCookie('goodsBasket')) {
+        Object.assign(goodsBasket, JSON.parse(getCookie('goodsBasket'))) ;
+      }
+      checkCounter(); 
+    } else {
+      document.cookie = `goodsBasket=${JSON.stringify(goodsBasket)}; max-age=86400e3`;
+    } 
+  };
+
+  const storageQuery = get => {
+    if (get) {
+      if(localStorage.getItem('wishlist')) {
+        wishlist.splice(Infinity, 0, ...JSON.parse(localStorage.getItem('wishlist')));
+        // const wishlistStorage = JSON.parse(localStorage.getItem('wishlist'));
+        // wishlistStorage.forEach(id => wishlist.push(id));
+      }
+      checkCounter();
+    } else {  
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    } 
+  };
+  
+  // События
+  
   const closeCart = event => { 
     const target = event.target;
     if (target === cart || 
@@ -110,8 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const showCardBasket = goods => goods.filter(item => goodsBasket.hasOwnProperty(item.id));
-
   const openCart = event => {
     event.preventDefault();
     cart.style.display = 'flex';
@@ -119,15 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
     getGoods(renderBasket, showCardBasket);
   };
 
-  const getGoods = (goods, filter) => {
-    loading();
-    fetch('./db/db.json')
-      .then(response => response.json())
-      .then(filter)
-      .then(goods);
-  };
-
-  const randomSort = item => item.sort(() => Math.random() - 0.5);
 
   const chooseCategory = event => {
     event.preventDefault();
@@ -155,40 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
     input.value = '';
   }
 
-  const getCookie = (name) => {
-    let matches = document.cookie.match(new RegExp(
-      "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-  }; 
-
-  const cookieQuery = get => {
-    if (get) {
-      goodsBasket = JSON.parse(getCookie('goodsBasket'));
-      checkCounter(); 
-    } else {
-      document.cookie = `goodsBasket=${JSON.stringify(goodsBasket)}; max-age=86400e3`;
-    } 
-  };
-
-  const checkCounter = () => {
-    wishlistCounter.textContent = wishlist.length;
-    cartCounter.textContent = Object.keys(goodsBasket).length;
-  };
-
-  const storageQuery = get => {
-    if (get) {
-      if(localStorage.getItem('wishlist')) {
-        const wishlistStorage = JSON.parse(localStorage.getItem('wishlist'));
-        wishlistStorage.forEach(id => wishlist.push(id));
-      }
-      checkCounter();
-    } else {  
-      localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    } 
-    
-  };
-
   const toggleWishlist = (goodsId, elem) => {
     if (wishlist.includes(goodsId)) {
       wishlist.splice(wishlist.indexOf (goodsId), 1)
@@ -211,6 +256,15 @@ document.addEventListener('DOMContentLoaded', () => {
     cookieQuery();
   };
 
+  const removeGoods = id => {
+    delete goodsBasket[id];
+    checkCounter();
+    cookieQuery();
+    getGoods(renderBasket, showCardBasket);
+  };
+
+  // Хэндлеры(обработчики)
+
   const handlerGoods = event => {
     const target = event.target;
     if(target.classList.contains('card-add-wishlist')) {
@@ -221,10 +275,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const showWishlist = event => {
-    event.preventDefault();
-    getGoods(renderCard, goods => goods.filter(item => wishlist.includes(item.id)))
-  };  
+  const handlerBasket = event => {
+    const target = event.target;
+    if(target.classList.contains('goods-add-wishlist')) {
+      toggleWishlist(target.dataset.goodsId, target);
+    };
+    if(target.classList.contains('goods-delete')) {
+      removeGoods(target.dataset.goodsId);
+    };
+  };
+
+  getGoods(renderCard, randomSort);
+  storageQuery('get');
+  cookieQuery('get');
 
   cartBtn.addEventListener('click', openCart);
   cart.addEventListener('click', closeCart);
@@ -232,8 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
   search.addEventListener('submit', searchGoods);
   goodsWrapper.addEventListener('click', handlerGoods);
   wishlistBtn.addEventListener('click', showWishlist);
+  cartWrapper.addEventListener('click', handlerBasket);
 
-  getGoods(renderCard, randomSort);
-  storageQuery(true);
-  cookieQuery(true);
 });
